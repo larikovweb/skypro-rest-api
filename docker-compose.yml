@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  mongodb:
+    image: 'mongo'
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - .env
+  rest_api:
+    image: 'rest-api'
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - '3005:3005'
+    volumes:
+      - ./src:/src
+      - /src/node_modules
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+
+volumes:
+  mongo-data:
+    driver: local
